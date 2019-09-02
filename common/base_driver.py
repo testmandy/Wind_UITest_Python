@@ -38,7 +38,7 @@ class BaseDriver:
         except Exception as msg:
             print('[MyLog]--------启动driver发生异常' % msg)
         else:
-            time.sleep(5)
+            time.sleep(2)
             return driver
 
     def ios_driver(self):

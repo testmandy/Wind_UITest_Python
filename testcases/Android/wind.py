@@ -1,5 +1,5 @@
 # coding=utf-8
-# @Time    : 2019/5/3 15:00
+# @Time    : 2019/9/3 15:00
 # @Author  : Mandy
 
 import time
@@ -31,9 +31,9 @@ class Wind(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        # 必须使用 @ classmethod装饰器, 所有test运行完后运行一次
-        my_ftp = MyFtp()
-        my_ftp.main()
+        # 运行结束后动作：上传FTP，关闭driver
+        # my_ftp = MyFtp()
+        # my_ftp.main()
         print(u'[MyLog]--------关闭driver')
         driver.quit()
 
@@ -49,9 +49,9 @@ class Wind(unittest.TestCase):
 
     def setUp(self):
         # 每个测试用例执行之前做操作
-        if operation.find_element("Update_cancel"):
+        if operation.find_element("Common_cancel"):
             # 若弹出升级提示则取消
-            operation.waiting_click(1, "Update_cancel")
+            operation.waiting_click(1, "Common_cancel")
         flag = operation.find_element("Tab_main")
         # print(flag)
         while flag is False:
@@ -60,8 +60,10 @@ class Wind(unittest.TestCase):
             # 若出现弹窗提示，点击确认
             while operation.find_element("Common_confirm_button"):
                 operation.waiting_click(1, "Common_confirm_button")
+            # 若出现获取权限，点击确认
             while operation.find_element("Permission_allow_button"):
                 operation.waiting_click(1, "Permission_allow_button")
+            # 若当前不在一级页面，点击返回
             while operation.find_element("Common_back_button"):
                 operation.waiting_click(1, "Common_back_button")
             flag = operation.find_element("Tab_main")
@@ -102,28 +104,84 @@ class Wind(unittest.TestCase):
 
     def test_match(self):
         # 点击匹配
-        operation.waiting_click(3, "Tab_main")
+        operation.waiting_click(2, "Tab_main")
         # 获取截屏
         operation.capture("test_match_1")
         # 点击吹走
-        operation.waiting_click(3, "Match_clean")
+        operation.waiting_click(2, "Match_clean")
         # 获取截屏
         operation.capture("test_match_2")
         # 点击卡片red
-        operation.waiting_click(3, "Match_card_red")
+        operation.waiting_click(2, "Match_card_red")
         # 获取截屏
         operation.capture("test_match_3")
         # 返回
-        operation.waiting_click(3, "Common_back_button")
+        operation.waiting_click(2, "Common_back_button")
         # 点击卡片yellow
-        operation.waiting_click(3, "Match_card_yellow")
+        operation.waiting_click(2, "Match_card_yellow")
         # 返回
-        operation.waiting_click(3, "Common_back_button")
+        operation.waiting_click(2, "Common_back_button")
         # 点击卡片blue
-        operation.waiting_click(3, "Match_card_blue")
+        operation.waiting_click(2, "Match_card_blue")
         # 获取截屏
         operation.capture("test_match")
         # 返回上一页
-        operation.waiting_click(3, "Common_back_button")
+        operation.waiting_click(2, "Common_back_button")
+
+    def test_chat(self):
+        # 点击爆灯yellow
+        operation.waiting_click(2, "Match_button_yellow")
+        # 点击离线聊天包
+        while operation.find_element("Chat_offline_button"):
+            operation.waiting_click(2, "Chat_offline_button")
+            # 解锁真心话
+            operation.waiting_click(2, "Chat_question_choose", 2)
+            time.sleep(2)
+        # 点击录音
+        operation.waiting_click(1, "Chat_voice")
+        # 若出现弹窗提示，点击确认
+        while operation.find_element("Common_confirm_button"):
+            operation.waiting_click(1, "Common_confirm_button")
+        # 若出现获取权限，点击确认
+        while operation.find_element("Permission_allow_button"):
+            operation.waiting_click(1, "Permission_allow_button")
+        # 长按录音
+        operation.test_long_press("Chat_record")
+        # 点击键盘
+        operation.waiting_click(1, "Chat_keyboard")
+        # 输入文字
+        operation.waiting_send_keys(1, "Chat_input", "1234567890")
+        # 点击发送
+        operation.waiting_click(1, "Chat_send_text")
+        # 点击加号
+        operation.waiting_click(1, "Chat_more")
+        # 点击位置
+        operation.waiting_click(1, "Chat_position")
+        # 若出现获取权限，点击确认
+        while operation.find_element("Permission_allow_button"):
+            operation.waiting_click(1, "Permission_allow_button")
+        # 点击第一个地址
+        operation.waiting_click(1, "Chat_address", 0)
+        # 点击确定
+        operation.waiting_click(1, "Common_right_button")
+        # 点击提问
+        operation.waiting_click(1, "Chat_question")
+        # 点击直接提问
+        operation.waiting_click(1, "Chat_ask")
+        # 输入问题
+        operation.waiting_send_keys(1, "Chat_input_question", "你喜欢旅行吗？")
+        # 点击发送
+        operation.waiting_click(1, "Common_submit")
+        # 点击道具
+        operation.waiting_click(1, "Chat_tools")
+        # 点击使用交换卡
+        operation.waiting_click(1, "Chat_card_exchange")
+        # 返回上一页
+        operation.waiting_click(1, "Common_back_button")
+
+
+
+
+
 
 

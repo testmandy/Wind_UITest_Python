@@ -1,7 +1,10 @@
 # coding=utf-8
-# @Time    : 2019/7/3 15:48
+# @Time    : 2019/9/3 15:48
 # @Author  : Mandy
 import time
+
+from appium.webdriver.common.touch_action import TouchAction
+
 import conftest
 from utils.get_element import GetElement
 
@@ -151,4 +154,13 @@ class Operation:
         y0 = self.driver.get_window_size()['height']
         # 屏幕坐标乘以系数即为用户要点击位置的具体坐标
         self.driver.tap([(a1 * x0, b1 * y0)])
+
+    def test_long_press(self, key, waiting_time=1):
+        """
+        长按屏幕元素
+        """
+        time.sleep(waiting_time)
+        action1 = TouchAction(self.driver)
+        el = self.starter.get_element(self.driver, key)
+        action1.long_press(el=el, duration=5000).wait(3000).perform()
 

@@ -16,7 +16,6 @@ elements_dir = os.path.join(project_dir, 'elements')
 
 android_elements_dir = os.path.join(elements_dir, 'android\\elements.ini')
 android_axis_dir = os.path.join(elements_dir, 'android\\axis.ini')
-userinfo_dir = os.path.join(elements_dir, 'android\\userinfo.ini')
 
 screenshots_dir = os.path.join(project_dir, 'screenshots\\')
 screenshots_list = os.path.join(project_dir, 'screenshots')
@@ -24,6 +23,8 @@ screenshots_list = os.path.join(project_dir, 'screenshots')
 config_dir = os.path.join(project_dir, 'config')
 
 userconfig_dir = os.path.join(config_dir, 'userconfig.yaml')
+userinfo_dir = os.path.join(config_dir, 'userinfo.ini')
+
 
 
 

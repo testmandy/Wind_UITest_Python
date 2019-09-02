@@ -24,10 +24,12 @@ class BaseDriver:
             "newCommandTimeout": "2000",
             "app": "E:\\360Downloads\\shenmefeng_105.apk",
             # 获取activity：aapt dump badging E:\360Downloads\shenmefeng_105.apk
-            # package: name='com.wind.im' versionCode='19' versionName='1.0.5'
-            # compileSdkVersion='28' compileSdkVersionCodename='9' sdkVersion:'21'
-            # launchable-activity: name='com.wind.im.activity.SplashActivity'
-            "appWaitActivity": "com.wind.im.activity.SplashActivity",
+
+            # "appWaitActivity": "com.wind.im.activity.SplashActivity",
+            # "appWaitActivity": "com.wind.im.activity.LoginActivity",
+            # "appWaitActivity": "cn.leancloud.chatkit.activity.LCIMConversationActivity",
+
+            "appWaitActivity": "com.wind.im.activity.MainActivity",
             "appPackage": "com.wind.im",
             "noReset": "true"
         }

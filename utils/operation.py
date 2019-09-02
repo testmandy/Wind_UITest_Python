@@ -136,7 +136,7 @@ class Operation:
         else:
             self.swipe_down()
 
-    def tap_test(self, key, waiting_time=2):
+    def tap_test(self, key, waiting_time=1):
         """
         根据屏幕定位点击元素
         """

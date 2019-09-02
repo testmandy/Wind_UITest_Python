@@ -49,14 +49,32 @@ class Wind(unittest.TestCase):
 
     def setUp(self):
         # 每个测试用例执行之前做操作
-        print ('------------------setup----------------')
+        if operation.find_element("Update_cancel"):
+            # 若弹出升级提示则取消
+            operation.waiting_click(1, "Update_cancel")
+        flag = operation.find_element("Tab_main")
+        # print(flag)
+        while flag is False:
+            # 若出现引导页则点击
+            operation.tap_test("center_location")
+            # 若出现弹窗提示，点击确认
+            while operation.find_element("Common_confirm_button"):
+                operation.waiting_click(1, "Common_confirm_button")
+            while operation.find_element("Permission_allow_button"):
+                operation.waiting_click(1, "Permission_allow_button")
+            while operation.find_element("Common_back_button"):
+                operation.waiting_click(1, "Common_back_button")
+            flag = operation.find_element("Tab_main")
+        print('[MyLog]------------------setup----------------')
 
-    def register(self):
-        # 点击注册手机号
+    def test_register(self):
+        # 获取ini文件中的信息
         telephone = read.get_value('telephone')
-        password = read.get_value('password')
+        code = read.get_value('code')
+        # 输入手机号
         operation.waiting_send_keys(3, "Register_telephone", telephone)
-        operation.waiting_send_keys(1, "Register_code", password)
+        # 输入验证码
+        operation.waiting_send_keys(2, "Register_code", code, 0)
         # 获取截屏
         operation.capture("register")
 
@@ -103,9 +121,6 @@ class Wind(unittest.TestCase):
         operation.waiting_click(3, "Common_back_button")
         # 点击卡片blue
         operation.waiting_click(3, "Match_card_blue")
-
-
-
         # 获取截屏
         operation.capture("test_match")
         # 返回上一页

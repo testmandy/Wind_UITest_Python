@@ -3,9 +3,7 @@
 # @Author  : Mandy
 
 import time
-import unittest
-
-import conftest
+import pytest
 from common.base_driver import BaseDriver
 from common.my_ftp import MyFtp
 from utils.operation import Operation
@@ -13,8 +11,42 @@ from utils.server import Server
 from common.read_ini import ReadIni
 
 
-# 继承unittest.TestCase
-class Wind(unittest.TestCase):
+class Wind(object):
+
+    @classmethod
+    def setup_class(cls):
+        # 必须使用@classmethod 装饰器,所有test运行前运行一次
+        global operation, driver, read
+        # 调用get_driver
+        # read = ReadIni(conftest.userinfo_dir)
+        server = Server()
+        server.main()
+        base_driver = BaseDriver(0)
+        driver = base_driver.android_driver()
+        # 实例化Operation
+        operation = Operation(driver)
+
+    def teardown(cls):
+        # 运行结束后动作：上传FTP，关闭driver
+        # my_ftp = MyFtp()
+        # my_ftp.main()
+        print(u'[MyLog]--------关闭driver')
+        driver.quit()
+
+    def setup_method(self):
+        # 每个测试用例执行之前做操作
+        self.close_window()
+        # 若当前不在一级页面，点击返回
+        self.back_home()
+        print('[MyLog]------------------setup----------------')
+
+    def teardown_method(self):
+        # 每个测试用例执行之后做操作
+        print(u'[MyLog]--------用例执行后')
+        self.back_home()
+        print(u'[MyLog]--------用例执行完成，开始执行下一个')
+
+    @pytest.fixture(scope='module')
     def close_window(self):
         flag1 = operation.find_element("Common_cancel")
         flag2 = operation.find_element("Common_confirm_button")
@@ -27,50 +59,14 @@ class Wind(unittest.TestCase):
                 operation.waiting_click(1, "Common_confirm_button")
             elif flag3:
                 operation.waiting_click(1, "Permission_allow_button")
-            flag1 = operation.find_element("Common_cancel")
-            flag2 = operation.find_element("Common_confirm_button")
-            flag3 = operation.find_element("Permission_allow_button")
 
+    @pytest.fixture(scope='module')
     def back_home(self):
         flag = operation.find_element("Common_back_button")
         while flag:
             operation.waiting_click(1, "Common_back_button")
 
-    @classmethod
-    def setUpClass(cls):
-        # 必须使用@classmethod 装饰器,所有test运行前运行一次
-        global operation, driver, read
-        # 调用get_driver
-        read = ReadIni(conftest.userinfo_dir)
-        server = Server()
-        server.main()
-        base_driver = BaseDriver(0)
-        driver = base_driver.android_driver()
-        # 实例化Operation
-        operation = Operation(driver)
-
-    @classmethod
-    def tearDownClass(cls):
-        # 运行结束后动作：上传FTP，关闭driver
-        # my_ftp = MyFtp()
-        # my_ftp.main()
-        print(u'[MyLog]--------关闭driver')
-        driver.quit()
-
-    def tearDown(self):
-        # 每个测试用例执行之后做操作
-        print(u'[MyLog]--------用例执行后')
-        self.back_home()
-        print(u'[MyLog]--------用例执行完成，开始执行下一个')
-
-    def setUp(self):
-        # 每个测试用例执行之前做操作
-        # 每个测试用例执行之前做操作
-        self.close_window()
-        # 若当前不在一级页面，点击返回
-        self.back_home()
-        print('[MyLog]------------------setup----------------')
-
+    @pytest.mark.skipif(reason='本次不执行')
     def test_register(self):
         # 获取ini文件中的信息
         telephone = read.get_value('telephone')
@@ -82,6 +78,7 @@ class Wind(unittest.TestCase):
         # 获取截屏
         operation.capture("register")
 
+    @pytest.mark.skipif(reason='本次不执行')
     def test_info(self):
         # 点击头像
         operation.waiting_click(3, "Register_photo")
@@ -104,6 +101,11 @@ class Wind(unittest.TestCase):
         operation.waiting_click(1, "Register_save")
 
 
+    # @pytest.mark.case
+    # @pytest.mark.level1
+    # @pytest.mark.run(order=1)
+    # @pytest.mark.parametrize
+    # @pytest.mark.flaky(reruns=5, reruns_delay=1)
     def test_match(self):
         # 点击匹配
         operation.waiting_click(2, "Tab_main")
@@ -130,6 +132,8 @@ class Wind(unittest.TestCase):
         # 返回上一页
         operation.waiting_click(2, "Common_back_button")
 
+
+    @pytest.mark.skipif(reason='本次不执行')
     def test_chat(self):
         # 点击爆灯yellow
         operation.waiting_click(2, "Match_button_yellow")
@@ -142,11 +146,7 @@ class Wind(unittest.TestCase):
         # 点击录音
         operation.waiting_click(1, "Chat_voice")
         # 若出现弹窗提示，点击确认
-        while operation.find_element("Common_confirm_button"):
-            operation.waiting_click(1, "Common_confirm_button")
-        # 若出现获取权限，点击确认
-        while operation.find_element("Permission_allow_button"):
-            operation.waiting_click(1, "Permission_allow_button")
+        self.close_window()
         # 长按录音
         operation.test_long_press("Chat_record")
         # 点击键盘
@@ -160,8 +160,7 @@ class Wind(unittest.TestCase):
         # 点击位置
         operation.waiting_click(1, "Chat_position")
         # 若出现获取权限，点击确认
-        while operation.find_element("Permission_allow_button"):
-            operation.waiting_click(1, "Permission_allow_button")
+        self.close_window()
         # 点击第一个地址
         operation.waiting_click(1, "Chat_address", 0)
         # 点击确定
@@ -180,3 +179,8 @@ class Wind(unittest.TestCase):
         operation.waiting_click(1, "Chat_card_exchange")
         # 返回上一页
         operation.waiting_click(1, "Common_back_button")
+
+
+
+if __name__ == '__main__':
+    pytest.main()

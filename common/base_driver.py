@@ -36,7 +36,7 @@ class BaseDriver:
         try:
             driver = webdriver.Remote("http://127.0.0.1:" + str(self.port) + "/wd/hub", capabilities)
         except Exception as msg:
-            print('[MyLog]--------启动driver发生异常' % msg)
+            print(u'[MyLog]--------启动driver发生异常')
         else:
             time.sleep(2)
             return driver

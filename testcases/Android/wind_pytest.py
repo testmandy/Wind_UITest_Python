@@ -4,6 +4,8 @@
 
 import time
 import pytest
+import allure
+import conftest
 from common.base_driver import BaseDriver
 from common.my_ftp import MyFtp
 from utils.operation import Operation
@@ -12,13 +14,11 @@ from common.read_ini import ReadIni
 
 
 class Wind(object):
-
-    @classmethod
     def setup_class(cls):
         # 必须使用@classmethod 装饰器,所有test运行前运行一次
         global operation, driver, read
         # 调用get_driver
-        # read = ReadIni(conftest.userinfo_dir)
+        read = ReadIni(conftest.userinfo_dir)
         server = Server()
         server.main()
         base_driver = BaseDriver(0)
@@ -28,17 +28,17 @@ class Wind(object):
 
     def teardown(cls):
         # 运行结束后动作：上传FTP，关闭driver
+        print(u'[MyLog]--------关闭driver')
         # my_ftp = MyFtp()
         # my_ftp.main()
-        print(u'[MyLog]--------关闭driver')
         driver.quit()
 
     def setup_method(self):
+        print('[MyLog]------------------setup----------------')
         # 每个测试用例执行之前做操作
         self.close_window()
         # 若当前不在一级页面，点击返回
         self.back_home()
-        print('[MyLog]------------------setup----------------')
 
     def teardown_method(self):
         # 每个测试用例执行之后做操作
@@ -59,6 +59,9 @@ class Wind(object):
                 operation.waiting_click(1, "Common_confirm_button")
             elif flag3:
                 operation.waiting_click(1, "Permission_allow_button")
+            flag1 = operation.find_element("Common_cancel")
+            flag2 = operation.find_element("Common_confirm_button")
+            flag3 = operation.find_element("Permission_allow_button")
 
     @pytest.fixture(scope='module')
     def back_home(self):
@@ -66,7 +69,9 @@ class Wind(object):
         while flag:
             operation.waiting_click(1, "Common_back_button")
 
-    @pytest.mark.skipif(reason='本次不执行')
+    @pytest.mark.level1
+    @pytest.mark.run(order=1)
+    @pytest.mark.parametrize
     def test_register(self):
         # 获取ini文件中的信息
         telephone = read.get_value('telephone')
@@ -78,7 +83,7 @@ class Wind(object):
         # 获取截屏
         operation.capture("register")
 
-    @pytest.mark.skipif(reason='本次不执行')
+    @pytest.mark.skip(reason="no way of currently testing this")
     def test_info(self):
         # 点击头像
         operation.waiting_click(3, "Register_photo")
@@ -102,9 +107,9 @@ class Wind(object):
 
 
     # @pytest.mark.case
-    # @pytest.mark.level1
-    # @pytest.mark.run(order=1)
-    # @pytest.mark.parametrize
+    @pytest.mark.level1
+    @pytest.mark.run(order=2)
+    @pytest.mark.parametrize
     # @pytest.mark.flaky(reruns=5, reruns_delay=1)
     def test_match(self):
         # 点击匹配
@@ -133,7 +138,9 @@ class Wind(object):
         operation.waiting_click(2, "Common_back_button")
 
 
-    @pytest.mark.skipif(reason='本次不执行')
+    @pytest.mark.level1
+    @pytest.mark.run(order=3)
+    @pytest.mark.parametrize
     def test_chat(self):
         # 点击爆灯yellow
         operation.waiting_click(2, "Match_button_yellow")
@@ -180,7 +187,3 @@ class Wind(object):
         # 返回上一页
         operation.waiting_click(1, "Common_back_button")
 
-
-
-if __name__ == '__main__':
-    pytest.main()

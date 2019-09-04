@@ -1,8 +1,10 @@
 # coding=utf-8
 # @Time    : 2019/9/3 15:48
 # @Author  : Mandy
+import os
 import time
 
+import configparser
 from appium.webdriver.common.touch_action import TouchAction
 
 import conftest
@@ -15,6 +17,8 @@ class Operation:
         print("[MyLog]--------Start to RUN testcase")
         # 实例化GetByLocal
         self.starter = GetElement()
+        # 清除report文件
+        self.delete_log()
 
     def capture(self, name):
         """
@@ -163,4 +167,67 @@ class Operation:
         action1 = TouchAction(self.driver)
         el = self.starter.get_element(self.driver, key)
         action1.long_press(el=el, duration=5000).wait(3000).perform()
+
+    def del_file(self, path):
+        """
+        定义方法：删除文件夹下所有文件
+        """
+        ls = os.listdir(path)
+        for i in ls:
+            c_path = os.path.join(path, i)
+            if os.path.isdir(c_path):
+                self.del_file(c_path)
+            else:
+                os.remove(c_path)
+
+    def delete_log(self):
+        """
+        定义方法：创建文件夹，并清除垃圾文件
+        """
+        if not os.path.exists('output'):
+            os.system(r'mkdir output')
+        if not os.path.exists('report'):
+            os.system(r'mkdir report')
+        if not os.path.exists('testapp'):
+            os.system(r'mkdir testapp')
+        if not os.path.exists('screenshots'):
+            os.system(r'mkdir screenshots')
+        if not os.path.exists('allure_result'):
+            os.system(r'mkdir allure_result')
+
+        os.system(r'rm -f ./output/*.*')
+        os.system(r'touch ./output/log.log')
+        os.system(r'rm -f ./report/*.*')
+        os.system(r'rm -f ./testapp/*.*')
+        os.system(r'rm -f ./screenshot/*.*')
+        os.system(r'rm -f ./allure_result/*.*')
+
+    def modify_env_config(self, app, env, platform, app_download_path):
+        config_env_file = os.path.join(conftest.config_dir, 'env.ini')
+        cp = configparser.ConfigParser()
+        cp.read(config_env_file, encoding="UTF-8")
+        cp.set('env', 'env', env)
+        cp.set('app', 'app_name', app)
+        cp.set('app_platform', 'platform_name', platform)
+        if platform == 'ios':
+            var = env + '_' + 'ios_app'
+            cp.set(app, var, app_download_path)
+        cp.write(open(config_env_file, 'w'))
+        if platform == 'android':
+            self.download_android_app(app, env, app_download_path)
+
+    def download_android_app(self, app, env, app_download_path):
+        SRC_WEB = 'http://10.88.0.23/recent/'
+        APP_DIR = './testapp/'
+        if app == 'dingtone':
+            DST_PRE = 'Dingtone'
+        elif app == 'talku':
+            DST_PRE = 'TalkU'
+        elif app == 'telos':
+            DST_PRE = 'Telos'
+        SRC_APP = app_download_path + '_' + env + '.apk'
+        DST_APP = DST_PRE + env.upper() + '.apk'
+        SRC = SRC_WEB + SRC_APP
+        DST = APP_DIR + DST_APP
+        os.system(r'wget %s -O %s' % (SRC, DST))
 

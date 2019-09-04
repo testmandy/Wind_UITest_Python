@@ -2,6 +2,7 @@
 # @Time    : 2019/5/3 15:00
 # @Author  : Mandy
 import logging
+import os
 import threading
 import time
 
@@ -127,14 +128,14 @@ class Server:
         if len(server_list)>0:
             self.dos.excute_cmd('taskkill -F -PID node.exe')
 
-    def main(self, platform=None):
+    def main(self, platform):
         """
         多线程，执行main方法
         step1：kill server
         step2：clear file(userconfig.yaml)
         step3：根据生成的 appium list 分线程执行 start server
         """
-        if platform is None:
+        if platform == 'android':
             android_device_list = self.get_devices()
             device_list = android_device_list
             self.kill_server()

@@ -12,8 +12,9 @@ from utils.operation import Operation
 from utils.server import Server
 from common.read_ini import ReadIni
 
-
-class Wind(object):
+@pytest.mark.wind
+@pytest.mark.usefixtures('')
+class Test_Wind(object):
     def setup_class(cls):
         # 必须使用@classmethod 装饰器,所有test运行前运行一次
         global operation, driver, read
@@ -69,9 +70,9 @@ class Wind(object):
         while flag:
             operation.waiting_click(1, "Common_back_button")
 
-    @pytest.mark.level1
-    @pytest.mark.run(order=1)
-    @pytest.mark.parametrize
+    # @pytest.mark.level1
+    # @pytest.mark.run(order=1)
+    # @pytest.mark.parametrize
     def test_register(self):
         # 获取ini文件中的信息
         telephone = read.get_value('telephone')
@@ -83,7 +84,10 @@ class Wind(object):
         # 获取截屏
         operation.capture("register")
 
-    @pytest.mark.skip(reason="no way of currently testing this")
+    # @pytest.mark.skip(reason="no way of currently testing this")
+    # @pytest.mark.level1
+    # @pytest.mark.run(order=9)
+    # @pytest.mark.parametrize
     def test_info(self):
         # 点击头像
         operation.waiting_click(3, "Register_photo")
@@ -107,9 +111,9 @@ class Wind(object):
 
 
     # @pytest.mark.case
-    @pytest.mark.level1
-    @pytest.mark.run(order=2)
-    @pytest.mark.parametrize
+    # @pytest.mark.level1
+    # @pytest.mark.run(order=2)
+    # @pytest.mark.parametrize
     # @pytest.mark.flaky(reruns=5, reruns_delay=1)
     def test_match(self):
         # 点击匹配
@@ -138,9 +142,9 @@ class Wind(object):
         operation.waiting_click(2, "Common_back_button")
 
 
-    @pytest.mark.level1
-    @pytest.mark.run(order=3)
-    @pytest.mark.parametrize
+    # @pytest.mark.level1
+    # @pytest.mark.run(order=3)
+    # @pytest.mark.parametrize
     def test_chat(self):
         # 点击爆灯yellow
         operation.waiting_click(2, "Match_button_yellow")
@@ -187,3 +191,6 @@ class Wind(object):
         # 返回上一页
         operation.waiting_click(1, "Common_back_button")
 
+
+if __name__ == '__main__':
+    pytest.main()

@@ -26,7 +26,8 @@ config_dir = os.path.join(project_dir, 'config')
 
 userconfig_dir = os.path.join(config_dir, 'userconfig.yaml')
 userinfo_dir = os.path.join(config_dir, 'userinfo.ini')
-android_case_dir = os.path.join(testcase_dir, 'Android\\wind.py')
+android_case_dir = os.path.join(testcase_dir, 'Android\\wind_pytest.py')
+ios_case_dir = os.path.join(testcase_dir, 'iOS\\ios_pytest.py')
 
 
 def get_logger():

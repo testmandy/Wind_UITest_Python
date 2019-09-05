@@ -2,10 +2,7 @@
 # @Time    : 2019/9/3 9:47
 # @Author  : Mandy
 import os
-import sys
-
 import conftest
-from utils.server import Server
 
 
 def run_case(platform, start_server_flag='yes'):

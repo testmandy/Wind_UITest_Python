@@ -17,7 +17,7 @@ class Operation:
         print("[MyLog]--------Start to RUN testcase")
         # 实例化GetByLocal
         self.starter = GetElement()
-        # 清除report文件
+        # 清除历史文件
         self.delete_log()
 
     def capture(self, name):
@@ -26,7 +26,7 @@ class Operation:
         """
         time.sleep(2)
         img_folder = conftest.screenshots_dir
-        time2 = time.strftime('%Y%m%d%H%M', time.localtime(time.time()))
+        time2 = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         screen_save_path = img_folder + time2 + '_' + name + '.png'
         self.driver.get_screenshot_as_file(screen_save_path)
 
@@ -199,7 +199,7 @@ class Operation:
         os.system(r'touch ./output/log.log')
         os.system(r'rm -f ./report/*.*')
         os.system(r'rm -f ./testapp/*.*')
-        os.system(r'rm -f ./screenshot/*.*')
+        os.system(r'rm -f ./screenshots/*.*')
         os.system(r'rm -f ./allure_result/*.*')
 
     def modify_env_config(self, app, env, platform, app_download_path):

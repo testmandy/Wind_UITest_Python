@@ -12,42 +12,42 @@ from utils.operation import Operation
 from utils.server import Server
 from common.read_ini import ReadIni
 
-@pytest.mark.wind
-@pytest.mark.usefixtures('')
-class Test_Wind(object):
-    def setup_class(cls):
-        # 必须使用@classmethod 装饰器,所有test运行前运行一次
-        global operation, driver, read
-        # 调用get_driver
-        read = ReadIni(conftest.userinfo_dir)
-        server = Server()
-        server.main()
-        base_driver = BaseDriver(0)
-        driver = base_driver.android_driver()
-        # 实例化Operation
-        operation = Operation(driver)
 
-    def teardown(cls):
-        # 运行结束后动作：上传FTP，关闭driver
-        print(u'[MyLog]--------关闭driver')
-        # my_ftp = MyFtp()
-        # my_ftp.main()
-        driver.quit()
+def setup_module():
+    # 必须使用@classmethod 装饰器,所有test运行前运行一次
+    global operation, driver, read
+    # 调用get_driver
+    read = ReadIni(conftest.userinfo_dir)
+    server = Server()
+    server.main('android')
+    base_driver = BaseDriver(0)
+    driver = base_driver.android_driver()
+    # 实例化Operation
+    operation = Operation(driver)
 
-    def setup_method(self):
+
+def teardown_module():
+    # 运行结束后动作：上传FTP，关闭driver
+    print(u'[MyLog]--------关闭driver')
+    # my_ftp = MyFtp()
+    # my_ftp.main()
+    driver.quit()
+
+
+class TestWind(object):
+    def setup_function(self):
         print('[MyLog]------------------setup----------------')
         # 每个测试用例执行之前做操作
         self.close_window()
         # 若当前不在一级页面，点击返回
         self.back_home()
 
-    def teardown_method(self):
+    def teardown_function(self):
         # 每个测试用例执行之后做操作
         print(u'[MyLog]--------用例执行后')
         self.back_home()
         print(u'[MyLog]--------用例执行完成，开始执行下一个')
 
-    @pytest.fixture(scope='module')
     def close_window(self):
         flag1 = operation.find_element("Common_cancel")
         flag2 = operation.find_element("Common_confirm_button")
@@ -64,15 +64,11 @@ class Test_Wind(object):
             flag2 = operation.find_element("Common_confirm_button")
             flag3 = operation.find_element("Permission_allow_button")
 
-    @pytest.fixture(scope='module')
     def back_home(self):
         flag = operation.find_element("Common_back_button")
         while flag:
             operation.waiting_click(1, "Common_back_button")
 
-    # @pytest.mark.level1
-    # @pytest.mark.run(order=1)
-    # @pytest.mark.parametrize
     def test_register(self):
         # 获取ini文件中的信息
         telephone = read.get_value('telephone')
@@ -84,10 +80,6 @@ class Test_Wind(object):
         # 获取截屏
         operation.capture("register")
 
-    # @pytest.mark.skip(reason="no way of currently testing this")
-    # @pytest.mark.level1
-    # @pytest.mark.run(order=9)
-    # @pytest.mark.parametrize
     def test_info(self):
         # 点击头像
         operation.waiting_click(3, "Register_photo")
@@ -109,12 +101,6 @@ class Test_Wind(object):
         # 点击保存
         operation.waiting_click(1, "Register_save")
 
-
-    # @pytest.mark.case
-    # @pytest.mark.level1
-    # @pytest.mark.run(order=2)
-    # @pytest.mark.parametrize
-    # @pytest.mark.flaky(reruns=5, reruns_delay=1)
     def test_match(self):
         # 点击匹配
         operation.waiting_click(2, "Tab_main")
@@ -141,10 +127,6 @@ class Test_Wind(object):
         # 返回上一页
         operation.waiting_click(2, "Common_back_button")
 
-
-    # @pytest.mark.level1
-    # @pytest.mark.run(order=3)
-    # @pytest.mark.parametrize
     def test_chat(self):
         # 点击爆灯yellow
         operation.waiting_click(2, "Match_button_yellow")
@@ -192,5 +174,3 @@ class Test_Wind(object):
         operation.waiting_click(1, "Common_back_button")
 
 
-if __name__ == '__main__':
-    pytest.main()

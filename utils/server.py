@@ -57,7 +57,7 @@ class Server:
     def port_is_used(self, port_num, platform=None):
         """
         判断端口是否被占用
-        :param platform: 平台：iOS/Android
+        :param platform: 平台：ios/android
         :param port_num: 检查的端口号
         :return:布尔值flag
         """
@@ -75,7 +75,7 @@ class Server:
     def create_port_list(self, start_port, device_list, platform):
         """
         生成可用端口
-        :param platform: 平台：iOS/Android
+        :param platform: 平台：ios/android
         :param device_list: 连接的设备
         :param start_port: 起始端口号，如4700
         :return:

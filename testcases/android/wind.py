@@ -180,3 +180,5 @@ class Wind(unittest.TestCase):
         operation.waiting_click(1, "Chat_card_exchange")
         # 返回上一页
         operation.waiting_click(1, "Common_back_button")
+
+

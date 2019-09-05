@@ -16,9 +16,9 @@ class BaseDriver:
     def android_driver(self):
         # server = Server()
         # port = server.port
-        print("[MyLog]--------Connected Device of Android driver: " + self.device)
+        print("[MyLog]--------Connected Device of android driver: " + self.device)
         capabilities = {
-            "platformName": "Android",
+            "platformName": "android",
             "deviceName": self.device,
             # 可以通过newcommandtimeout将超时时间改长，超时时间可按照实际情况自定义
             "newCommandTimeout": "2000",
@@ -43,11 +43,11 @@ class BaseDriver:
 
     def ios_driver(self):
         # 配置信息
-        print("[MyLog]--------Connected Device of iOS driver: " + self.device)
+        print("[MyLog]--------Connected Device of ios driver: " + self.device)
         capability = {
             "newCommandTimeout": "2000",
             "automationName": "XCUITest",
-            "platformName": "iOS",
+            "platformName": "ios",
             "platformVersion": "12.1",
             "deviceName": "iPhone Simulator",
             "udid": "31158BAD-B39C-476D-B6C0-1BFF874C53F9",

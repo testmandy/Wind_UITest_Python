@@ -7,7 +7,7 @@ import unittest
 import HTMLTestRunner
 
 import conftest
-from testcases.android.wind import Wind
+from testcases.ios.wind import Wind
 
 if __name__ == '__main__':
     # unittest.main(verbosity=2) # 一次执行所有用例

@@ -1,13 +1,13 @@
 # coding=utf-8
 # @Time    : 2019/9/3 15:00
 # @Author  : Mandy
-
+import os
 import time
 import pytest
 import conftest
 from common.base_driver import BaseDriver
 from utils.operation import Operation
-from utils.server import Server
+from utils.server import Server, logger
 from common.read_ini import ReadIni
 
 
@@ -30,42 +30,13 @@ def teardown_module():
     print(u'[MyLog]--------关闭driver')
     # my_ftp = MyFtp()
     # my_ftp.main()
-    driver.quit()
+    if driver is not None:
+        driver.quit()
 
 
 @pytest.mark.usefixtures('close_window_before')
+@pytest.mark.common
 class TestWind(object):
-    # def setup_function(self):
-    #     print('[MyLog]------------------setup----------------')
-    #     # 每个测试用例执行之前做操作
-    #     self.close_window()
-    #     # 若当前不在一级页面，点击返回
-    #     self.back_home()
-
-    # def teardown_function(self):
-    #     # 每个测试用例执行之后做操作
-    #     print(u'[MyLog]--------用例执行后')
-    #     self.back_home()
-    #     print(u'[MyLog]--------用例执行完成，开始执行下一个')
-
-    def close_window(self):
-        # 若出现引导页则点击
-        # operation.tap_test("center_location")
-        flag1 = operation.find_element("Common_cancel")
-        flag2 = operation.find_element("Common_confirm_button")
-        flag3 = operation.find_element("Permission_allow_button")
-        # 循环检查当前是否出现弹窗
-        while flag1 or flag2 or flag3:
-            if flag1:
-                operation.waiting_click(1, "Common_cancel")
-            elif flag2:
-                operation.waiting_click(1, "Common_confirm_button")
-            elif flag3:
-                operation.waiting_click(1, "Permission_allow_button")
-            flag1 = operation.find_element("Common_cancel")
-            flag2 = operation.find_element("Common_confirm_button")
-            flag3 = operation.find_element("Permission_allow_button")
-
     @pytest.fixture(scope='module')
     def close_window_before(self):
         # 每个测试用例执行之前做操作
@@ -85,6 +56,24 @@ class TestWind(object):
         while operation.find_element("Common_back_button"):
             operation.waiting_click(1, "Common_back_button")
 
+    def close_window(self):
+        # 若出现引导页则点击
+        # operation.tap_test("center_location")
+        flag1 = operation.find_element("Common_cancel")
+        flag2 = operation.find_element("Common_confirm_button")
+        flag3 = operation.find_element("Permission_allow_button")
+        # 循环检查当前是否出现弹窗
+        while flag1 or flag2 or flag3:
+            if flag1:
+                operation.waiting_click(1, "Common_cancel")
+            elif flag2:
+                operation.waiting_click(1, "Common_confirm_button")
+            elif flag3:
+                operation.waiting_click(1, "Permission_allow_button")
+            flag1 = operation.find_element("Common_cancel")
+            flag2 = operation.find_element("Common_confirm_button")
+            flag3 = operation.find_element("Permission_allow_button")
+
     def back_home(self):
         flag = operation.find_element("Common_back_button")
         while flag:
@@ -96,40 +85,6 @@ class TestWind(object):
         if operation.find_element("Tab_main"):
             flag = True
         return flag
-
-    @pytest.mark.skip
-    def test_register(self):
-        # 获取ini文件中的信息
-        telephone = read.get_value('telephone')
-        code = read.get_value('code')
-        # 输入手机号
-        operation.waiting_send_keys(3, "Register_telephone", telephone)
-        # 输入验证码
-        operation.waiting_send_keys(2, "Register_code", code, 0)
-        # 获取截屏
-        operation.capture("register")
-
-    @pytest.mark.skip
-    def test_info(self):
-        # 点击头像
-        operation.waiting_click(3, "Register_photo")
-        # 点击拍摄照片
-        operation.waiting_click(2, "Register_camera")
-        # 拍照
-        # 点击确认
-
-        # 输入昵称
-        operation.waiting_send_keys(3, "Register_nickname", "test_nickname")
-        # 选择性别
-        operation.waiting_click(1, "Register_man")
-        # 选择生日
-        operation.waiting_click(1, "Register_birthday")
-        # 确认日期
-        operation.waiting_click(1, "")
-        # 获取截屏
-        operation.capture("test_info")
-        # 点击保存
-        operation.waiting_click(1, "Register_save")
 
     def test_match(self):
         # 点击匹配
@@ -205,6 +160,7 @@ class TestWind(object):
         # 返回上一页
         operation.waiting_click(1, "Common_back_button")
 
+    @pytest.mark.skip
     def test_map(self):
         # 点击闪现
         operation.waiting_click(1, "Tab_map")
@@ -240,12 +196,12 @@ class TestWind(object):
                 if operation.find_element("Card_pic_one"):
                     operation.waiting_click(1, "Card_pic_three")
 
-
+    @pytest.mark.skip
     def test_post(self):
         operation.waiting_click(1, "Tab_post")
         # 点击发布+
 
-
+    @pytest.mark.skip
     def test_me(self):
         operation.waiting_click(1, "Tab_me")
         # 点击发布+

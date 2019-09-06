@@ -2,10 +2,17 @@
 # @Time    : 2019/9/3 9:47
 # @Author  : Mandy
 import os
+import sys
 import conftest
+from common.base_driver import BaseDriver
+from utils.server import Server
 
 
-def run_case(platform, start_server_flag='yes'):
+def stop_server():
+    os.system(r'tskill node')
+
+
+def run_case(mark, platform, start_server_flag='yes'):
     case_path = None
     if platform == 'android':
         case_path = conftest.android_case_dir
@@ -14,11 +21,13 @@ def run_case(platform, start_server_flag='yes'):
     # if start_server_flag == 'yes':
     #     start_server = Server()
     #     start_server.main(platform)
-    os.system("pytest -v " + case_path)
+    command = os.system(r'pytest -v -s -m "%s" %s ' % (mark, case_path))
+    print(command)
 
 
-def main(platform):
-    run_case(platform)
+def main(modules, platform):
+    modules_str = modules.replace(',', ' or ')
+    run_case(modules_str, platform)
 
 
 if __name__ == '__main__':
@@ -28,9 +37,9 @@ if __name__ == '__main__':
         sys.exit()
     main(app,system,app_download_path,model,priority,rerun_failedcase,install_flag,platform,concurrency)
     """
-    # platform = sys.argv[1]
-    platform = 'android'
-    main(platform)
+    modules = sys.argv[1]
+    platform = sys.argv[2]
+    main(modules, platform)
 
 
 

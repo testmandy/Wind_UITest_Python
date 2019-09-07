@@ -3,6 +3,8 @@
 # @Author  : Mandy
 import os
 import time
+
+import allure
 import pytest
 import conftest
 from common.base_driver import BaseDriver
@@ -34,6 +36,7 @@ def teardown_module():
         driver.quit()
 
 
+@allure.feature('注册、完善信息')  # feature定义功能
 @pytest.mark.usefixtures('close_window_before')
 @pytest.mark.register
 class TestRegister(object):
@@ -98,7 +101,7 @@ class TestRegister(object):
         # 点击确定
         operation.waiting_click(1, "Common_submit")
 
-
+    @allure.severity(1)
     def test_register(self):
         # 若已登录则退出
         if self.is_login:
@@ -113,6 +116,7 @@ class TestRegister(object):
         # 获取截屏
         operation.capture("register")
 
+    @allure.severity(2)
     def test_info(self):
         # 点击头像
         operation.waiting_click(3, "Register_photo")

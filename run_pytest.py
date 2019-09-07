@@ -17,7 +17,7 @@ def delete_log():
     make_and_clean_folder('report')
     make_and_clean_folder('testapp')
     make_and_clean_folder('screenshots')
-    make_and_clean_folder('allure_report')
+    make_and_clean_folder('allure-report')
 
 
 def make_and_clean_folder(folder_name):
@@ -74,9 +74,6 @@ def main(modules, install_flag, platform):
         install_and_run_case(modules_str, platform)
     else:
         run_case(modules_str, platform)
-    # 生成html报告
-    os.system('cd ' + conftest.project_dir)
-    os.system('allure generate report')
 
 
 if __name__ == '__main__':

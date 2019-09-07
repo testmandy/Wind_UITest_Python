@@ -36,7 +36,7 @@ def teardown_module():
         driver.quit()
 
 
-@allure.feature('购物车功能')  # feature定义功能
+@allure.feature('app主功能')  # feature定义功能
 @pytest.mark.usefixtures('close_window_before')
 @pytest.mark.common
 class TestWind(object):

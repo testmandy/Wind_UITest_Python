@@ -119,3 +119,9 @@ class TestWind(object):
         operation.capture("test_info")
         # 点击保存
         operation.waiting_click(1, "Register_save")
+
+    def logout(self):
+        operation.waiting_click(1, "Tab_me")
+
+
+

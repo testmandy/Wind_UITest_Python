@@ -4,6 +4,10 @@
 import time
 
 from appium import webdriver
+
+import conftest
+from common import Utility_Android
+from common.read_ini import ReadIni
 from common.write_userconfig import WriteUserConfig
 
 
@@ -12,6 +16,8 @@ class BaseDriver:
         write_file = WriteUserConfig()
         self.device = write_file.get_value('device' + str(i), 'deviceName')
         self.port = write_file.get_value('device' + str(i), 'port')
+        read = ReadIni(conftest.env_dir)
+        self.env_flag = read.get_value('noReset_flag_android')
 
     def android_driver(self):
         # server = Server()
@@ -22,20 +28,18 @@ class BaseDriver:
             "deviceName": self.device,
             # 可以通过newcommandtimeout将超时时间改长，超时时间可按照实际情况自定义
             "newCommandTimeout": "2000",
-            "app": "E:\\360Downloads\\shenmefeng_105.apk",
+            "app": Utility_Android.apk_path,
             # 获取activity：aapt dump badging E:\360Downloads\shenmefeng_105.apk
-
             # "appWaitActivity": "com.wind.im.activity.SplashActivity",
             # "appWaitActivity": "com.wind.im.activity.LoginActivity",
             # "appWaitActivity": "cn.leancloud.chatkit.activity.LCIMConversationActivity",
-
             "appWaitActivity": "com.wind.im.activity.MainActivity",
             "appPackage": "com.wind.im",
-            "noReset": "true"
+            "noReset": self.env_flag
         }
         try:
             driver = webdriver.Remote("http://127.0.0.1:" + str(self.port) + "/wd/hub", capabilities)
-        except Exception as msg:
+        except Exception:
             print(u'[MyLog]--------启动driver发生异常')
         else:
             time.sleep(2)

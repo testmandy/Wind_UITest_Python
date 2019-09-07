@@ -130,35 +130,37 @@ class TestWind(object):
         # 长按录音
         operation.test_long_press("Chat_record")
         # 点击键盘
-        operation.waiting_click(1, "Chat_keyboard")
+        operation.waiting_click(2, "Chat_keyboard")
         # 输入文字
-        operation.waiting_send_keys(1, "Chat_input", "1234567890")
+        operation.waiting_send_keys(2, "Chat_input", "1234567890")
         # 点击发送
-        operation.waiting_click(1, "Chat_send_text")
+        operation.waiting_click(2, "Chat_send_text")
         # 点击加号
-        operation.waiting_click(1, "Chat_more")
+        operation.waiting_click(2, "Chat_more")
         # 点击位置
-        operation.waiting_click(1, "Chat_position")
+        operation.waiting_click(2, "Chat_position")
         # 若出现获取权限，点击确认
         self.close_window()
         # 点击第一个地址
-        operation.waiting_click(1, "Chat_address", 0)
+        operation.waiting_click(2, "Chat_address", 0)
         # 点击确定
-        operation.waiting_click(1, "Common_right_button")
+        operation.waiting_click(2, "Common_right_button")
         # 点击提问
-        operation.waiting_click(1, "Chat_question")
-        # 点击直接提问
-        operation.waiting_click(1, "Chat_ask")
+        operation.waiting_click(3, "Chat_question")
+        # 若发现有离线聊天问题，则点击直接提问
+        if operation.find_element("Chat_question_choose"):
+            # 点击直接提问
+            operation.waiting_click(2, "Chat_ask")
         # 输入问题
-        operation.waiting_send_keys(1, "Chat_input_question", "Do you like travelling? ")
+        operation.waiting_send_keys(2, "Chat_input_question", "Do you like travelling? ")
         # 点击发送
-        operation.waiting_click(1, "Common_submit")
+        operation.waiting_click(2, "Common_submit")
         # 点击道具
-        operation.waiting_click(1, "Chat_tools")
+        operation.waiting_click(2, "Chat_tools")
         # 点击使用交换卡
-        operation.waiting_click(1, "Chat_card_exchange")
+        operation.waiting_click(2, "Chat_card_exchange")
         # 返回上一页
-        operation.waiting_click(1, "Common_back_button")
+        operation.waiting_click(2, "Common_back_button")
 
     @pytest.mark.skip
     def test_map(self):
@@ -205,5 +207,4 @@ class TestWind(object):
     def test_me(self):
         operation.waiting_click(1, "Tab_me")
         # 点击发布+
-
 

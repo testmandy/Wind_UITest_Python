@@ -3,6 +3,8 @@
 # @Author  : Mandy
 import os
 import time
+
+import allure
 import pytest
 import conftest
 from common.base_driver import BaseDriver
@@ -34,6 +36,7 @@ def teardown_module():
         driver.quit()
 
 
+@allure.feature('购物车功能')  # feature定义功能
 @pytest.mark.usefixtures('close_window_before')
 @pytest.mark.common
 class TestWind(object):
@@ -82,7 +85,9 @@ class TestWind(object):
     def is_login(self):
         flag = None
         self.close_window()
-        if operation.find_element("Tab_main"):
+        if operation.find_element("Register_telephone"):
+            flag = False
+        elif operation.find_element("Tab_main"):
             flag = True
         return flag
 
@@ -124,7 +129,7 @@ class TestWind(object):
             operation.waiting_click(2, "Chat_question_choose", 2)
             time.sleep(2)
         # 点击录音
-        operation.waiting_click(1, "Chat_voice")
+        operation.waiting_click(2, "Chat_voice")
         # 若出现弹窗提示，点击确认
         self.close_window()
         # 长按录音

@@ -7,28 +7,37 @@ import pytest
 import conftest
 from common.base_driver import BaseDriver
 from utils.operation import Operation
-from utils.server import Server, logger
+from utils.server import Server
 from common.read_ini import ReadIni
 
 
-@pytest.mark.usefixtures('connect_app')
-@pytest.mark.usefixtures('close_driver')
-@pytest.mark.register
-class TestWind(object):
-    @pytest.fixture(scope='function')
-    def connect_app(self):
-        logger.info('------------------setup----------------')
-        # 实例化Operation
-        global operation, read, driver
-        server = Server()
-        server.main('android')
-        base_driver = BaseDriver(0)
-        driver = base_driver.android_driver()
-        read = ReadIni(conftest.userinfo_dir)
-        operation = Operation(driver)
-        print('[MyLog]--------DRIVER is starting NOW')
-        self.close_window_before()
+def setup_module():
+    # 必须使用@classmethod 装饰器,所有test运行前运行一次
+    global operation, driver, read
+    # 调用get_driver
+    read = ReadIni(conftest.userinfo_dir)
+    server = Server()
+    server.main('android')
+    base_driver = BaseDriver(0)
+    driver = base_driver.android_driver()
+    # 实例化Operation
+    operation = Operation(driver)
+    print('[MyLog]--------OPERATION is inited NOW')
 
+
+def teardown_module():
+    # 运行结束后动作：上传FTP，关闭driver
+    print(u'[MyLog]--------关闭driver')
+    # my_ftp = MyFtp()
+    # my_ftp.main()
+    if driver is not None:
+        driver.quit()
+
+
+@pytest.mark.usefixtures('close_window_before')
+@pytest.mark.register
+class TestRegister(object):
+    @pytest.fixture(scope='module')
     def close_window_before(self):
         # 每个测试用例执行之前做操作
         # 若弹出升级提示则取消
@@ -46,17 +55,6 @@ class TestWind(object):
         # 若当前不在一级页面，点击返回
         while operation.find_element("Common_back_button"):
             operation.waiting_click(1, "Common_back_button")
-
-    @pytest.fixture(scope='function')
-    def close_driver(self):
-        pass
-        yield
-        # 运行结束后动作：上传FTP，关闭driver
-        print(u'[MyLog]--------关闭driver')
-        # my_ftp = MyFtp()
-        # my_ftp.main()
-        if driver is not None:
-            driver.quit()
 
     def close_window(self):
         # 若出现引导页则点击
@@ -84,11 +82,27 @@ class TestWind(object):
     def is_login(self):
         flag = None
         self.close_window()
-        if operation.find_element("Tab_main"):
+        if operation.find_element("Register_telephone"):
+            flag = False
+        elif operation.find_element("Tab_main"):
             flag = True
         return flag
 
+    def logout(self):
+        # 点击我
+        operation.waiting_click(1, "Tab_me")
+        # 点击设置
+        operation.waiting_click(1, "Me_cards", 3)
+        # 点击退出登录
+        operation.waiting_click(1, "Setting_logout")
+        # 点击确定
+        operation.waiting_click(1, "Common_submit")
+
+
     def test_register(self):
+        # 若已登录则退出
+        if self.is_login:
+            self.logout()
         # 获取ini文件中的信息
         telephone = read.get_value('telephone')
         code = read.get_value('code')
@@ -105,23 +119,24 @@ class TestWind(object):
         # 点击拍摄照片
         operation.waiting_click(2, "Register_camera")
         # 拍照
+        operation.tap_test('camera_shutter')
         # 点击确认
-
+        operation.waiting_click(2, "Camera_ok")
+        # 确认截取照片
+        operation.waiting_click(2, "Camera_done")
         # 输入昵称
-        operation.waiting_send_keys(3, "Register_nickname", "test_nickname")
+        operation.waiting_send_keys(5, "Register_nickname", "test_nickname")
         # 选择性别
-        operation.waiting_click(1, "Register_man")
+        operation.waiting_click(2, "Register_man")
         # 选择生日
-        operation.waiting_click(1, "Register_birthday")
+        operation.waiting_click(2, "Register_birthday")
         # 确认日期
-        operation.waiting_click(1, "")
+        operation.waiting_click(2, "Day_sure")
         # 获取截屏
         operation.capture("test_info")
         # 点击保存
         operation.waiting_click(1, "Register_save")
 
-    def logout(self):
-        operation.waiting_click(1, "Tab_me")
 
 
 

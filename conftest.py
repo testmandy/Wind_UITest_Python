@@ -5,11 +5,16 @@ import os
 import logging
 import logging.config
 
+import allure
+import pytest
+import yaml
+
 project_dir = os.path.dirname(os.path.abspath(__file__))
 
 log_dir = os.path.join(project_dir, 'logs\\')
 
 report_dir = os.path.join(project_dir, 'report\\')
+allure_result_dir = os.path.join(project_dir, 'allure_result\\')
 
 elements_dir = os.path.join(project_dir, 'elements')
 
@@ -36,4 +41,5 @@ def get_logger():
     CONF_LOG = "../config/logging.ini"
     logging.config.fileConfig(CONF_LOG)
     logger = logging.getLogger()
+
 

@@ -17,7 +17,8 @@ class BaseDriver:
         self.device = write_file.get_value('device' + str(i), 'deviceName')
         self.port = write_file.get_value('device' + str(i), 'port')
         read = ReadIni(conftest.env_dir)
-        self.env_flag = read.get_value('noReset_flag_android')
+        self.env_flag = read.get_value('noReset_flag_android', 'caps')
+        self.apk_dir = read.get_value('apk_dir', 'app')
 
     def android_driver(self):
         # server = Server()
@@ -28,7 +29,8 @@ class BaseDriver:
             "deviceName": self.device,
             # 可以通过newcommandtimeout将超时时间改长，超时时间可按照实际情况自定义
             "newCommandTimeout": "2000",
-            "app": Utility_Android.apk_path,
+            "app": self.apk_dir,
+            # Utility_Android.apk_path,
             # 获取activity：aapt dump badging E:\360Downloads\shenmefeng_105.apk
             # "appWaitActivity": "com.wind.im.activity.SplashActivity",
             # "appWaitActivity": "com.wind.im.activity.LoginActivity",
@@ -39,8 +41,8 @@ class BaseDriver:
         }
         try:
             driver = webdriver.Remote("http://127.0.0.1:" + str(self.port) + "/wd/hub", capabilities)
-        except Exception:
-            print(u'[MyLog]--------启动driver发生异常')
+        except Exception as msg:
+            print(u"[MyLog]--------Connection Error：%s" % msg)
         else:
             time.sleep(2)
             return driver
@@ -61,7 +63,7 @@ class BaseDriver:
         try:
             driver = webdriver.Remote("http://127.0.0.1:" + str(self.port) + "/wd/hub", capability)
         except Exception as msg:
-            print(u'启动driver发生异常' % msg)
+            print(u"[MyLog]--------Connection Error：%s" % msg)
         else:
             time.sleep(5)
             return driver

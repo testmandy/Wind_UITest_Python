@@ -4,33 +4,31 @@
 import configparser
 import os
 import sys
+
 import conftest
 from common import Utility_Android
-from common.base_driver import BaseDriver
-from utils.server import Server
 
 
 def delete_log():
     """
     定义方法：创建文件夹，并清除垃圾文件
     """
-    if not os.path.exists('output'):
-        os.system(r'mkdir output')
-    if not os.path.exists('report'):
-        os.system(r'mkdir report')
-    if not os.path.exists('testapp'):
-        os.system(r'mkdir testapp')
-    if not os.path.exists('screenshots'):
-        os.system(r'mkdir screenshots')
-    if not os.path.exists('allure_result'):
-        os.system(r'mkdir allure_result')
+    make_and_clean_folder('output')
+    make_and_clean_folder('report')
+    make_and_clean_folder('testapp')
+    make_and_clean_folder('screenshots')
+    make_and_clean_folder('allure_report')
 
-    os.system(r'rm -f ./output/*.*')
-    os.system(r'touch ./output/log.log')
-    os.system(r'rm -f ./report/*.*')
-    os.system(r'rm -f ./testapp/*.*')
-    os.system(r'rm -f ./screenshots/*.*')
-    os.system(r'rm -f ./allure_result/*.*')
+
+def make_and_clean_folder(folder_name):
+    """
+    定义方法：创建文件夹，并清除垃圾文件
+    """
+    if not os.path.exists(folder_name):
+        os.system(r'mkdir ' + folder_name)
+    new_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), folder_name)
+    # 删除文件夹下的文件
+    os.system(r'del /s/q ' + new_dir)
 
 
 def modify_env_config(noReset_flag_android, platform):
@@ -42,24 +40,26 @@ def modify_env_config(noReset_flag_android, platform):
         # 远程下载apk包
         Utility_Android.download_and_move()
 
+
 def stop_server():
     os.system(r'tskill node')
 
 
 def run_case(mark, platform):
     case_path = None
+    result_path = conftest.report_dir
     if platform == 'android':
         case_path = conftest.android_case_dir
     elif platform == 'ios':
         case_path = conftest.ios_case_dir
-    command = os.system(r'pytest -v -s -m "%s" %s ' % (mark, case_path))
+    command = os.system(r'pytest -v -s -m "%s" %s --alluredir %s' % (mark, case_path, result_path))
     print(command)
 
 
 def install_and_run_case(mark, platform):
     case_path = None
     if platform == 'android':
-        modify_env_config(False, 'android')
+        modify_env_config('false', 'android')
         case_path = conftest.android_case_dir
     elif platform == 'ios':
         case_path = conftest.ios_case_dir
@@ -74,22 +74,24 @@ def main(modules, install_flag, platform):
         install_and_run_case(modules_str, platform)
     else:
         run_case(modules_str, platform)
+    # 生成html报告
+    os.system('cd ' + conftest.project_dir)
+    os.system('allure generate report')
 
 
 if __name__ == '__main__':
-    """
-    python run.py $App $System $Source $Model $Priority $Rerunfailedcase $Install android $Concurrency
-        if len(sys.argv) != 10:
-        sys.exit()
-    main(app,system,app_download_path,model,priority,rerun_failedcase,install_flag,platform,concurrency)
-    """
-    modules = sys.argv[1]
-    install_flag = sys.argv[2]
-    platform = sys.argv[3]
-    # modules = 'common'
-    # install_flag = 'no'
-    # platform = 'android'
-    main(modules, install_flag, platform)
+    if len(sys.argv) != 4:
+        modules = 'common'
+        install_flag = 'no'
+        platform = 'android'
+        main(modules, install_flag, platform)
+    else:
+        modules = sys.argv[1]
+        install_flag = sys.argv[2]
+        platform = sys.argv[3]
+        main(modules, install_flag, platform)
+
+
 
 
 

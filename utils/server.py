@@ -150,7 +150,7 @@ class Server:
             print(u"[MyLog]--------设备读取异常%s" % msg)
         else:
             for i in range(len(device_list)):
-                if platform is None:
+                if platform == 'android':
                     appium_start = threading.Thread(target=self.start_server, args=(i, device_list))
                 else:
                     appium_start = threading.Thread(target=self.start_server, args=(i, device_list, 'ios'))

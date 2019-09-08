@@ -21,8 +21,7 @@ class BaseDriver:
         self.apk_dir = read.get_value('apk_dir', 'app')
 
     def android_driver(self):
-        # server = Server()
-        # port = server.port
+        time.sleep(2)
         print("[MyLog]--------Connected Device of android driver: " + self.device)
         capabilities = {
             "platformName": "android",

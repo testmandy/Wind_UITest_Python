@@ -79,7 +79,7 @@ def main(modules, install_flag, telephone, platform):
 
 if __name__ == '__main__':
     if len(sys.argv) != 5:
-        modules = 'chat'
+        modules = 'mine'
         install_flag = 'no'
         telephone = '15212345678'
         platform = 'android'

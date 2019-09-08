@@ -8,8 +8,8 @@ import requests
 import conftest
 from common.read_ini import ReadIni
 
-read = ReadIni(conftest.userinfo_dir)
-url = read.get_value('download_url', 'App')
+read = ReadIni(conftest.env_dir)
+url = read.get_value('download_url', 'app')
 filename = os.path.basename(url)
 filename = filename.split('?')[0]
 apk_path = os.path.join(conftest.apk_dir, filename)

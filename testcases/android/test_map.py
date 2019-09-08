@@ -17,7 +17,7 @@ def setup_module():
     # 必须使用@classmethod 装饰器,所有test运行前运行一次
     global operation, driver, read
     # 调用get_driver
-    read = ReadIni(conftest.userinfo_dir)
+    read = ReadIni(conftest.env_dir)
     server = Server()
     server.main('android')
     base_driver = BaseDriver(0)
@@ -38,7 +38,7 @@ def teardown_module():
 
 @allure.feature('app主功能')  # feature定义功能
 @pytest.mark.usefixtures('close_window_before')
-@pytest.mark.common
+@pytest.mark.map
 class TestWind(object):
     @pytest.fixture(scope='module')
     def close_window_before(self):
@@ -91,83 +91,8 @@ class TestWind(object):
             flag = True
         return flag
 
-    def test_match(self):
-        # 点击匹配
-        operation.waiting_click(2, "Tab_main")
-        # 获取截屏
-        operation.capture("test_match_1")
-        # 点击吹走
-        operation.waiting_click(2, "Match_clean")
-        # 获取截屏
-        operation.capture("test_match_2")
-        # 点击卡片red
-        operation.waiting_click(2, "Match_card_red")
-        # 获取截屏
-        operation.capture("test_match_3")
-        # 返回
-        operation.waiting_click(2, "Common_back_button")
-        # 点击卡片yellow
-        operation.waiting_click(2, "Match_card_yellow")
-        # 返回
-        operation.waiting_click(2, "Common_back_button")
-        # 点击卡片blue
-        operation.waiting_click(2, "Match_card_blue")
-        # 获取截屏
-        operation.capture("test_match")
-        # 返回上一页
-        operation.waiting_click(2, "Common_back_button")
-
-    def test_chat(self):
-        # 点击爆灯yellow
-        operation.waiting_click(2, "Match_button_yellow")
-        # 获取截屏
-        operation.capture("test_chat")
-        # 点击离线聊天包
-        while operation.find_element("Chat_offline_button"):
-            operation.waiting_click(2, "Chat_offline_button")
-            # 解锁真心话
-            operation.waiting_click(2, "Chat_question_choose", 2)
-            time.sleep(2)
-        # 点击录音
-        operation.waiting_click(2, "Chat_voice")
-        # 若出现弹窗提示，点击确认
-        self.close_window()
-        # 长按录音
-        operation.test_long_press("Chat_record")
-        # 点击键盘
-        operation.waiting_click(2, "Chat_keyboard")
-        # 输入文字
-        operation.waiting_send_keys(2, "Chat_input", "1234567890")
-        # 点击发送
-        operation.waiting_click(2, "Chat_send_text")
-        # 点击加号
-        operation.waiting_click(2, "Chat_more")
-        # 点击位置
-        operation.waiting_click(2, "Chat_position")
-        # 若出现获取权限，点击确认
-        self.close_window()
-        # 点击第一个地址
-        operation.waiting_click(2, "Chat_address", 0)
-        # 点击确定
-        operation.waiting_click(2, "Common_right_button")
-        # 点击提问
-        operation.waiting_click(3, "Chat_question")
-        # 若发现有离线聊天问题，则点击直接提问
-        if operation.find_element("Chat_question_choose"):
-            # 点击直接提问
-            operation.waiting_click(2, "Chat_ask")
-        # 输入问题
-        operation.waiting_send_keys(2, "Chat_input_question", "Do you like travelling? ")
-        # 点击发送
-        operation.waiting_click(2, "Common_submit")
-        # 点击道具
-        operation.waiting_click(2, "Chat_tools")
-        # 点击使用交换卡
-        operation.waiting_click(2, "Chat_card_exchange")
-        # 返回上一页
-        operation.waiting_click(2, "Common_back_button")
-
-    @pytest.mark.skip
+    @allure.severity(1)
+    @allure.story('地图')
     def test_map(self):
         # 点击闪现
         operation.waiting_click(1, "Tab_map")
@@ -202,14 +127,4 @@ class TestWind(object):
                     operation.waiting_click(1, "Card_pic_two")
                 if operation.find_element("Card_pic_one"):
                     operation.waiting_click(1, "Card_pic_three")
-
-    @pytest.mark.skip
-    def test_post(self):
-        operation.waiting_click(1, "Tab_post")
-        # 点击发布+
-
-    @pytest.mark.skip
-    def test_me(self):
-        operation.waiting_click(1, "Tab_me")
-        # 点击发布+
 

@@ -31,14 +31,11 @@ def make_and_clean_folder(folder_name):
     os.system(r'del /s/q ' + new_dir)
 
 
-def modify_env_config(noReset_flag_android, platform):
+def modify_env_config(section, key, value):
     config_env_file = conftest.env_dir
     cp = configparser.ConfigParser()
     cp.read(config_env_file, encoding="UTF-8")
-    cp.set('caps', 'noReset_flag', noReset_flag_android)
-    if platform == 'android':
-        # 远程下载apk包
-        Utility_Android.download_and_move()
+    cp.set(section, key, value)
 
 
 def stop_server():
@@ -58,17 +55,21 @@ def run_case(mark, platform):
 
 def install_and_run_case(mark, platform):
     case_path = None
+    result_path = conftest.report_dir
     if platform == 'android':
-        modify_env_config('false', 'android')
+        modify_env_config('caps', 'noReset_flag', 'false')
+        # 远程下载apk包
+        Utility_Android.download_and_move()
         case_path = conftest.android_case_dir
     elif platform == 'ios':
         case_path = conftest.ios_case_dir
-    command = os.system(r'pytest -v -s -m "%s" %s ' % (mark, case_path))
+    command = os.system(r'pytest -v -s -m "%s" %s ' % (mark, case_path, result_path))
     print(command)
 
 
-def main(modules, install_flag, platform):
+def main(modules, install_flag, telephone, platform):
     delete_log()
+    modify_env_config('Common', 'telephone', telephone)
     modules_str = modules.replace(',', ' or ')
     if install_flag is 'yes':
         install_and_run_case(modules_str, platform)
@@ -77,19 +78,18 @@ def main(modules, install_flag, platform):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        modules = 'common'
+    if len(sys.argv) != 5:
+        modules = 'chat'
         install_flag = 'no'
+        telephone = '15212345678'
         platform = 'android'
-        main(modules, install_flag, platform)
+        main(modules, install_flag, telephone, platform)
     else:
         modules = sys.argv[1]
         install_flag = sys.argv[2]
-        platform = sys.argv[3]
-        main(modules, install_flag, platform)
-
-
-
+        telephone = sys.argv[3]
+        platform = sys.argv[4]
+        main(modules, install_flag, telephone, platform)
 
 
 

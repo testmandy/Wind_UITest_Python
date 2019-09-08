@@ -30,7 +30,6 @@ apk_dir = os.path.join(project_dir, 'testapp')
 config_dir = os.path.join(project_dir, 'config')
 
 userconfig_dir = os.path.join(config_dir, 'userconfig.yaml')
-userinfo_dir = os.path.join(config_dir, 'userinfo.ini')
 android_case_dir = os.path.join(testcase_dir, 'android')
 env_dir = os.path.join(config_dir, 'env.ini')
 

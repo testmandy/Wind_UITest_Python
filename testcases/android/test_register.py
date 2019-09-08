@@ -17,7 +17,7 @@ def setup_module():
     # 必须使用@classmethod 装饰器,所有test运行前运行一次
     global operation, driver, read
     # 调用get_driver
-    read = ReadIni(conftest.userinfo_dir)
+    read = ReadIni(conftest.env_dir)
     server = Server()
     server.main('android')
     base_driver = BaseDriver(0)
@@ -102,6 +102,7 @@ class TestRegister(object):
         operation.waiting_click(1, "Common_submit")
 
     @allure.severity(1)
+    @allure.story('注册功能')
     def test_register(self):
         # 若已登录则退出
         if self.is_login:
@@ -117,6 +118,7 @@ class TestRegister(object):
         operation.capture("register")
 
     @allure.severity(2)
+    @allure.story('完善信息')
     def test_info(self):
         # 点击头像
         operation.waiting_click(3, "Register_photo")

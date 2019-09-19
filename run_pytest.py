@@ -63,7 +63,7 @@ def install_and_run_case(mark, platform):
         case_path = conftest.android_case_dir
     elif platform == 'ios':
         case_path = conftest.ios_case_dir
-    command = os.system(r'pytest -v -s -m "%s" %s ' % (mark, case_path, result_path))
+    command = os.system(r'pytest -v -s -m "%s" %s %s ' % (mark, case_path, result_path))
     print(command)
 
 
@@ -80,7 +80,7 @@ def main(modules, install_flag, telephone, platform):
 if __name__ == '__main__':
     if len(sys.argv) != 5:
         modules = 'mine'
-        install_flag = 'no'
+        install_flag = 'yes'
         telephone = '15212345678'
         platform = 'android'
         main(modules, install_flag, telephone, platform)

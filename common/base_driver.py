@@ -18,7 +18,7 @@ class BaseDriver:
         self.port = write_file.get_value('device' + str(i), 'port')
         read = ReadIni(conftest.env_dir)
         self.env_flag = read.get_value('noReset_flag_android', 'caps')
-        self.apk_dir = read.get_value('apk_dir', 'app')
+        self.apk_dir = conftest.apk_path
 
     def android_driver(self):
         time.sleep(2)

@@ -26,6 +26,7 @@ screenshots_list = os.path.join(project_dir, 'screenshots')
 
 testcase_dir = os.path.join(project_dir, 'testcases\\')
 apk_dir = os.path.join(project_dir, 'testapp')
+apk_path = os.path.join(project_dir, 'testapp\\shenmefeng.apk')
 
 config_dir = os.path.join(project_dir, 'config')
 

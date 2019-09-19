@@ -128,3 +128,5 @@ class TestWind(object):
                 if operation.find_element("Card_pic_one"):
                     operation.waiting_click(1, "Card_pic_three")
 
+
+

@@ -12,6 +12,8 @@ read = ReadIni(conftest.env_dir)
 url = read.get_value('download_url', 'app')
 filename = os.path.basename(url)
 filename = filename.split('?')[0]
+new_name = read.get_value('app_name', 'app')
+
 apk_path = os.path.join(conftest.apk_dir, filename)
 
 # def Schedule(a,b,c):
@@ -70,13 +72,19 @@ def download_apk(num, url):
 
 
 def move_file():
-    old_dir = os.path.join(conftest.project_dir, 'common', filename)
+    old_path = os.path.join(conftest.project_dir, new_name)
     new_dir = conftest.apk_dir
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
-    if os.path.exists(old_dir):
-        shutil.move(old_dir, new_dir)
-        print(old_dir, '\n', new_dir)
+    if os.path.exists(old_path):
+        shutil.move(old_path, new_dir)
+        # print(old_path, '\n', new_dir)
+    print("[MyLog]--------The file was moved to: " + new_dir)
+
+
+def rename_file(old, new):
+    os.rename(old, new)
+    print("[MyLog]--------The file was renamed: " + new)
 
 
 def download_and_move():
@@ -84,6 +92,8 @@ def download_and_move():
     start = datetime.now()
     end = datetime.now() - start
     print('用时：' + str(end))
+    rename_file(filename, new_name)
     move_file()
+
 
 

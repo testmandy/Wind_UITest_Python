@@ -67,10 +67,19 @@ def install_and_run_case(mark, platform):
     print(command)
 
 
-def main(modules, install_flag, telephone, platform):
+def main(modules, install_flag, telephone, platform, download_url):
+    # 运行前先清除临时文件
     delete_log()
+    print("[MyLog]-------- The LOG files has been removed. ")
+    # 修改apk包下载地址
+    modify_env_config('app', 'download_url', download_url)
+    print("[MyLog]-------- The Download Url is: " + download_url)
+    # 修改登录的手机号
     modify_env_config('Common', 'telephone', telephone)
+    print("[MyLog]-------- The Login account is: " + telephone)
+    # 将模块分开
     modules_str = modules.replace(',', ' or ')
+    # 开始运行用例
     if install_flag is 'yes':
         install_and_run_case(modules_str, platform)
     else:
@@ -78,18 +87,18 @@ def main(modules, install_flag, telephone, platform):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
-        modules = 'mine'
-        install_flag = 'yes'
+    if len(sys.argv) != 6:
+        modules = 'chat'
+        install_flag = 'no'
         telephone = '15212345678'
         platform = 'android'
-        main(modules, install_flag, telephone, platform)
+        download_url = 'https://test-1257246693.cos.ap-shanghai.myqcloud.com/app-release.apk'
+        main(modules, install_flag, telephone, platform, download_url)
     else:
         modules = sys.argv[1]
         install_flag = sys.argv[2]
         telephone = sys.argv[3]
         platform = sys.argv[4]
-        main(modules, install_flag, telephone, platform)
-
-
+        download_url = sys.argv[5]
+        main(modules, install_flag, telephone, platform, download_url)
 

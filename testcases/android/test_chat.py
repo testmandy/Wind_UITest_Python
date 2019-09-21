@@ -122,12 +122,14 @@ class TestWind(object):
         operation.waiting_click(2, "Match_button_yellow")
         # 获取截屏
         operation.capture("test_chat")
-        # 点击离线聊天包
+        time.sleep(3)
+        # 如果有离线包
         while operation.find_element("Chat_offline_button"):
-            operation.waiting_click(2, "Chat_offline_button")
-            # 解锁真心话
-            operation.waiting_click(2, "Chat_question_choose", 2)
-            time.sleep(2)
+            # 则点击离线聊天包
+            operation.waiting_click(1, "Chat_offline_button")
+            # 再点击真心话，解锁
+            operation.waiting_click(1, "Chat_question_choose_title", 0)
+            time.sleep(1)
         # 点击录音
         operation.waiting_click(2, "Chat_voice")
         # 若出现弹窗提示，点击确认

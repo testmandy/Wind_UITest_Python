@@ -7,6 +7,7 @@ import sys
 
 import conftest
 from common import Utility_Android
+from utils.server import Server
 
 
 def delete_log():
@@ -36,6 +37,14 @@ def modify_env_config(section, key, value):
     cp = configparser.ConfigParser()
     cp.read(config_env_file, encoding="UTF-8")
     cp.set(section, key, value)
+    # write to file
+    cp.write(open(config_env_file, "w"))
+    print(u'[MyLog]--------ini文件修改成功')
+
+
+def start_server(platform):
+    server = Server()
+    server.main(platform)
 
 
 def stop_server():
@@ -67,10 +76,18 @@ def install_and_run_case(mark, platform):
     print(command)
 
 
-def main(modules, install_flag, telephone, platform):
+def main(modules, install_flag, telephone, platform, download_url):
+    # 清除log等文件
     delete_log()
+    # 修改手机号
     modify_env_config('Common', 'telephone', telephone)
+    # 修改下载地址
+    modify_env_config('app', 'download_url', download_url)
+    # 拆分模块
     modules_str = modules.replace(',', ' or ')
+    # 启动appium server
+    start_server(platform)
+    # 执行用例
     if install_flag is 'yes':
         install_and_run_case(modules_str, platform)
     else:
@@ -79,17 +96,17 @@ def main(modules, install_flag, telephone, platform):
 
 if __name__ == '__main__':
     if len(sys.argv) != 5:
-        modules = 'mine'
-        install_flag = 'yes'
-        telephone = '15212345678'
+        modules = 'chat,mine'
+        install_flag = 'no'
+        telephone = '13012345678'
         platform = 'android'
-        main(modules, install_flag, telephone, platform)
+        download_url = 'https://test-1257246693.cos.ap-shanghai.myqcloud.com/app-release.apk'
+        main(modules, install_flag, telephone, platform, download_url)
     else:
         modules = sys.argv[1]
         install_flag = sys.argv[2]
         telephone = sys.argv[3]
         platform = sys.argv[4]
-        main(modules, install_flag, telephone, platform)
-
-
+        download_url = sys.argv[5]
+        main(modules, install_flag, telephone, platform, download_url)
 

@@ -12,13 +12,16 @@ from common.write_userconfig import WriteUserConfig
 
 
 class BaseDriver:
-    def __init__(self, i):
+    def __init__(self, i=0, install_flag=None):
         write_file = WriteUserConfig()
         self.device = write_file.get_value('device' + str(i), 'deviceName')
         self.port = write_file.get_value('device' + str(i), 'port')
         read = ReadIni(conftest.env_dir)
         self.env_flag = read.get_value('noReset_flag_android', 'caps')
-        self.apk_dir = conftest.apk_path
+        if install_flag is 'yes':
+            self.apk_dir = conftest.apk_path
+        else:
+            self.apk_dir = read.get_value('apk_dir', 'app')
 
     def android_driver(self):
         time.sleep(2)

@@ -103,7 +103,7 @@ class Server:
         appium_port_list = self.create_port_list(4700, device_list, platform)
         bootstrap_port_list = self.create_port_list(4900, device_list, platform)
         if platform is None:
-            command = "start /b appium -p " + str(appium_port_list[i]) + " -bp " + str(bootstrap_port_list[i]) + \
+            command = "start /b appium -a 127.0.0.1 -p " + str(appium_port_list[i]) + " -bp " + str(bootstrap_port_list[i]) + \
                       " -U " + device_list[i] + " --session-override "
         else:
             command = "appium -a 127.0.0.1 -p " + str(appium_port_list[i]) + " --session-override "
@@ -118,6 +118,7 @@ class Server:
         """
         start_appium_list = self.create_appium_command(i, device_list, platform)
         print("[MyLog]--------" + str(start_appium_list))
+        self.dos.excute_cmd('set BUILD_ID=dontKillMe')
         self.dos.excute_cmd(start_appium_list[0])
 
     def kill_server(self):

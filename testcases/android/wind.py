@@ -43,8 +43,8 @@ class Wind(unittest.TestCase):
         # 调用get_driver
         read = ReadIni(conftest.userinfo_dir)
         server = Server()
-        server.main()
-        base_driver = BaseDriver(0)
+        server.main('android')
+        base_driver = BaseDriver()
         driver = base_driver.android_driver()
         # 实例化Operation
         operation = Operation(driver)

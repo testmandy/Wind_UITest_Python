@@ -15,7 +15,9 @@ from common.read_ini import ReadIni
 
 def setup_module():
     # 必须使用@classmethod 装饰器,所有test运行前运行一次
-    global operation, driver
+    global operation, driver, read
+    # 调用get_driver
+    read = ReadIni(conftest.userinfo_dir)
     base_driver = BaseDriver()
     driver = base_driver.android_driver()
     # 实例化Operation

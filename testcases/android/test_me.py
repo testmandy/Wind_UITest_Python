@@ -147,10 +147,16 @@ class TestWind(object):
         # 若发现编辑按钮则点击
         if operation.find_element("Offline_edit_button"):
             operation.waiting_click(2, "Offline_edit_button")
-        else:
-            operation.waiting_click(2, "Offline_add_button")
-        # 获取截屏
-        operation.capture("test_question")
+            # 获取截屏
+            operation.capture("test_question")
+            # 删除这个聊天问题
+            operation.waiting_click(2, "Common_right_button")
+            # 确认删除
+            operation.waiting_click(2, "Common_submit")
+            # 删除成功
+            operation.waiting_click(2, "Common_submit")
+        # 添加问题
+        operation.waiting_click(2, "Offline_add_button")
         # 输入问题
         operation.waiting_send_keys(2, "Offline_question", "this is offline question")
         # 输入答案

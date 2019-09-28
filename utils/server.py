@@ -157,7 +157,7 @@ class Server:
                 thread_list.append(appium_start)
             for j in thread_list:
                 j.start()
-            time.sleep(10)
+            time.sleep(15)
 
 
 

@@ -129,11 +129,9 @@ class TestWind(object):
         operation.waiting_click(2, "Chat_voice")
         # 若出现弹窗提示，点击确认
         self.close_window()
+        if operation.find_element("Chat_record"):
+            operation.waiting_click(1, "Chat_record")
         # 长按录音
-        operation.test_long_press("Chat_record")
-        # 第二次点击录音
-        operation.waiting_click(2, "Chat_voice")
-        # 第二次长按录音
         operation.test_long_press("Chat_record")
         # 点击键盘
         operation.waiting_click(2, "Chat_keyboard")

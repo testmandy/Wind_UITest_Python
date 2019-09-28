@@ -121,15 +121,19 @@ class TestWind(object):
         operation.capture("test_chat")
         # 点击离线聊天包
         while operation.find_element("Chat_offline_button"):
-            operation.waiting_click(2, "Chat_offline_button")
+            operation.waiting_click(1, "Chat_offline_button")
             # 解锁真心话
-            operation.waiting_click(2, "Chat_question_choose", 2)
-            time.sleep(2)
+            operation.waiting_click(1, "Chat_question_choose_title", 0)
+            time.sleep(1)
         # 点击录音
         operation.waiting_click(2, "Chat_voice")
         # 若出现弹窗提示，点击确认
         self.close_window()
         # 长按录音
+        operation.test_long_press("Chat_record")
+        # 第二次点击录音
+        operation.waiting_click(2, "Chat_voice")
+        # 第二次长按录音
         operation.test_long_press("Chat_record")
         # 点击键盘
         operation.waiting_click(2, "Chat_keyboard")

@@ -32,14 +32,14 @@ class BaseDriver:
             # 可以通过newcommandtimeout将超时时间改长，超时时间可按照实际情况自定义
             "newCommandTimeout": "2000",
             "app": self.apk_dir,
+            "appWaitActivity": "com.wind.im.activity.MainActivity",
+            "appPackage": "com.wind.im",
+            "noReset": self.env_flag
             # Utility_Android.apk_path,
             # 获取activity：aapt dump badging E:\360Downloads\shenmefeng_105.apk
             # "appWaitActivity": "com.wind.im.activity.SplashActivity",
             # "appWaitActivity": "com.wind.im.activity.LoginActivity",
             # "appWaitActivity": "cn.leancloud.chatkit.activity.LCIMConversationActivity",
-            "appWaitActivity": "com.wind.im.activity.MainActivity",
-            "appPackage": "com.wind.im",
-            "noReset": self.env_flag
         }
         try:
             driver = webdriver.Remote("http://127.0.0.1:" + str(self.port) + "/wd/hub", capabilities)

@@ -95,7 +95,7 @@ def main(modules, install_flag, telephone, platform, download_url):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 6:
         modules = 'chat,mine'
         install_flag = 'no'
         telephone = '13012345678'

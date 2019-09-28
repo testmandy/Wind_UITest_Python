@@ -111,7 +111,7 @@ class TestWind(object):
         # 获取截屏
         operation.capture("test_card")
         # 点击发布按钮
-        operation.waiting_click(1, "Image_submit")
+        operation.waiting_click(3, "Image_submit")
         # 发布成功，点击确定
         operation.waiting_click(1, "Image_success")
         # 若当前不在一级页面，点击返回

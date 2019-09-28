@@ -15,12 +15,9 @@ from common.read_ini import ReadIni
 
 def setup_module():
     # 必须使用@classmethod 装饰器,所有test运行前运行一次
-    global operation, driver, read
+    global operation, driver
     # 调用get_driver
-    read = ReadIni(conftest.env_dir)
-    server = Server()
-    server.main('android')
-    base_driver = BaseDriver(0)
+    base_driver = BaseDriver()
     driver = base_driver.android_driver()
     # 实例化Operation
     operation = Operation(driver)
@@ -116,7 +113,7 @@ class TestWind(object):
         # 点击发布按钮
         operation.waiting_click(1, "Image_submit")
         # 发布成功，点击确定
-        operation.waiting_click(1, "Image_success")
+        operation.waiting_click(3, "Image_success")
         # 若当前不在一级页面，点击返回
         while operation.find_element("Common_back_button"):
             operation.waiting_click(1, "Common_back_button")

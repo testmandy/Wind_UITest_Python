@@ -15,12 +15,9 @@ from common.read_ini import ReadIni
 
 def setup_module():
     # 必须使用@classmethod 装饰器,所有test运行前运行一次
-    global operation, driver, read
+    global operation, driver
     # 调用get_driver
-    read = ReadIni(conftest.env_dir)
-    server = Server()
-    server.main('android')
-    base_driver = BaseDriver(0)
+    base_driver = BaseDriver()
     driver = base_driver.android_driver()
     # 实例化Operation
     operation = Operation(driver)
@@ -122,12 +119,10 @@ class TestWind(object):
         operation.waiting_click(2, "Match_button_yellow")
         # 获取截屏
         operation.capture("test_chat")
-        time.sleep(3)
-        # 如果有离线包
+        # 点击离线聊天包
         while operation.find_element("Chat_offline_button"):
-            # 则点击离线聊天包
             operation.waiting_click(1, "Chat_offline_button")
-            # 再点击真心话，解锁
+            # 解锁真心话
             operation.waiting_click(1, "Chat_question_choose_title", 0)
             time.sleep(1)
         # 点击录音
@@ -135,6 +130,10 @@ class TestWind(object):
         # 若出现弹窗提示，点击确认
         self.close_window()
         # 长按录音
+        operation.test_long_press("Chat_record")
+        # 第二次点击录音
+        operation.waiting_click(2, "Chat_voice")
+        # 第二次长按录音
         operation.test_long_press("Chat_record")
         # 点击键盘
         operation.waiting_click(2, "Chat_keyboard")

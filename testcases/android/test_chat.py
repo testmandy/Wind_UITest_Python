@@ -139,11 +139,11 @@ class TestWind(object):
         # operation.waiting_send_keys(2, "Chat_input", "1234567890")
         # 循环输入100文字
 
-        for i in range(1, 100):
+        for i in range(1, 10):
             operation.waiting_send_keys(1, "Chat_input", str(i))
             i += 1
             # 点击发送
-            operation.waiting_click(1, "Chat_send_text")
+            operation.waiting_click(0, "Chat_send_text")
 
         # 点击加号
         operation.waiting_click(2, "Chat_more")
